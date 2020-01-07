@@ -2,10 +2,11 @@ package main
 
 import (
 	"fmt"
+
+	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/ses"
-	"github.com/aws/aws-lambda-go/lambda"
 )
 
 func handleRequest() (string, error) {
@@ -15,17 +16,17 @@ func handleRequest() (string, error) {
 		Destination: &ses.Destination{
 			CcAddresses: []*string{},
 			ToAddresses: []*string{
-				aws.String("jdockerty19@gmail.com")},
+				aws.String("MY_EMAIL")},
 		},
 		Message: &ses.Message{
 			Body: &ses.Body{
 				Html: &ses.Content{
 					Charset: aws.String("UTF-8"),
-					Data:    aws.String("'text here'"),
+					Data:    aws.String("HTML question format here, same as Python version."),
 				},
 				Text: &ses.Content{
 					Charset: aws.String("UTF-8"),
-					Data:    aws.String("This is the message body in text format."),
+					Data:    aws.String("Message plain text here"),
 				},
 			},
 			Subject: &ses.Content{
@@ -33,7 +34,7 @@ func handleRequest() (string, error) {
 				Data:    aws.String("Daily Questions"),
 			},
 		},
-		Source:        aws.String("jdockerty19@gmail.com"),
+		Source: aws.String("MY_EMAIL"),
 	}
 
 	result, err := sesClient.SendEmail(emailContent)
@@ -45,5 +46,5 @@ func handleRequest() (string, error) {
 }
 func main() {
 	lambda.Start(handleRequest)
-	
+
 }
